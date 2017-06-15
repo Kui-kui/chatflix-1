@@ -25,4 +25,5 @@ class Bot(object):
                 intro = "Bonjour ! Je vais vous poser des questions puis vous faire une recommandation.\n"
 
             message = self.recommendation.ask_question(user)
+
             return intro + message

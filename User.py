@@ -39,7 +39,7 @@ class User:
     def set_question(self, movie_number):
         self.latest_movie_asked = movie_number
         if self.questions_before_recommendation is None or self.questions_before_recommendation <= 0:
-            self.questions_before_recommendation = 5
+            self.questions_before_recommendation = 2
 
     # Traite le message de l'utilisateur
     def give_message(self, message):
@@ -59,10 +59,9 @@ class User:
         # On enlève les espaces en trop et on met tout le message en miniscule
         self.latest_movie_asked = None
 
-
     # Donne la norme de l'utilisateur
     def get_norm(self):
-        return 1
+        return len(self.good_ratings) + len(self.bad_ratings) + len(self.neutral_ratings)
 
     # Donne un vecteur avec les notations normalisées de l'utilisateur
     def get_normalised_cluster_notations(self):

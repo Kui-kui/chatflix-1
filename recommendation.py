@@ -4,6 +4,8 @@ from User import User
 from random import randint
 
 import numpy as np
+import operator
+
 from sklearn.cluster import KMeans
 
 from movielens import load_movies, load_simplified_ratings
@@ -70,32 +72,52 @@ class Recommendation:
 
     # Affiche la recommandation pour l'utilisateur
     def make_recommendation(self, user):
-        return "Vous n'avez pas de recommandation pour le moment."
+        similarities = self.compute_all_similarities(user)
+
+        test_user_id = max(similarities.items(), key=operator.itemgetter(1))[0]
+        test_user = self.test_users[test_user_id]
+
+        movies = dict([(movie.id, movie.title) for movie in self.movies])
+        return str([movies[movie_id] for movie_id in test_user.good_ratings])
 
     # Pose une question à l'utilisateur
     def ask_question(self, user):
-        movies = [
-            "le Seigneur des Anneaux",
-            "Harry Potter",
-            "Star Wars",
-            "Pokemon",
-            "Barbie Casse Noisettes",
-            "Twilight",
-            "Toy Story",
-            "La Faille",
-            "Requiem for a Dream",
-            "le Loup de Wall Street"
-        ]
-        i = randint(0, len(movies) - 1)
-        user.set_question(i)
+        i = randint(0, len(self.movies_list) - 1)
+        movie = self.movies[i]
+        user.set_question(movie.id)
 
-        return "Hello Nikui, tu as aimé {} ?".format(movies[i])
+        return "Hello Nikui, tu as aimé {} ?".format(movie.title)
 
     # Calcule la similarité entre 2 utilisateurs
     @staticmethod
     def get_similarity(user_a, user_b):
-        return 0
+        ans = 0
+        good_ratings_b = set(user_b.good_ratings)
+        bad_ratings_b = set(user_b.bad_ratings)
+        neutral_ratings_b = set(user_b.neutral_ratings)
+
+        for good_rating in user_a.good_ratings:
+            if good_rating in good_ratings_b:
+                ans += 2
+            elif good_rating in bad_ratings_b:
+                ans -= 2
+
+        for bad_rating in user_a.bad_ratings:
+            if bad_rating in bad_ratings_b:
+                ans += 2
+            elif bad_rating in good_ratings_b:
+                ans -= 2
+
+        for neutral_rating in user_a.neutral_ratings:
+            if neutral_rating in neutral_ratings_b:
+                ans += 1
+
+        return ans / (user_a.get_norm() + user_b.get_norm())
 
     # Calcule la similarité entre un utilisateur et tous les utilisateurs de tests
     def compute_all_similarities(self, user):
-        return []
+        similarities = {}
+        for other_user in self.test_users.values():
+            similarities[other_user.id] = Recommendation.get_similarity(user, other_user)
+
+        return similarities
