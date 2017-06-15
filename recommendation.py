@@ -86,7 +86,9 @@ class Recommendation:
             "Requiem for a Dream",
             "le Loup de Wall Street"
         ]
-        i = randint(0, len(movies)-1)
+        i = randint(0, len(movies) - 1)
+        user.set_question(i)
+
         return "Hello Nikui, tu as aimé {} ?".format(movies[i])
 
     # Calcule la similarité entre 2 utilisateurs
