@@ -74,7 +74,8 @@ class Recommendation:
 
     # Pose une question à l'utilisateur
     def ask_question(self, user):
-        return "Hello Nikui, quel film voudrais-tu voir aujourd'hui ?"
+        i = randint(0, 1)
+        return "Hello Nikui, tu as aimé le Seigneur des Anneaux ?" if i%2 else "Hello Nikui, tu as aimé Harry Potter ?"
 
     # Calcule la similarité entre 2 utilisateurs
     @staticmethod
