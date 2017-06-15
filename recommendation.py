@@ -74,8 +74,20 @@ class Recommendation:
 
     # Pose une question à l'utilisateur
     def ask_question(self, user):
-        i = randint(0, 1)
-        return "Hello Nikui, tu as aimé le Seigneur des Anneaux ?" if i%2 else "Hello Nikui, tu as aimé Harry Potter ?"
+        movies = [
+            "le Seigneur des Anneaux",
+            "Harry Potter",
+            "Star Wars",
+            "Pokemon",
+            "Barbie Casse Noisettes",
+            "Twilight",
+            "Toy Story",
+            "La Faille",
+            "Requiem for a Dream",
+            "le Loup de Wall Street"
+        ]
+        i = randint(0, len(movies)-1)
+        return "Hello Nikui, tu as aimé {} ?".format(movies[i])
 
     # Calcule la similarité entre 2 utilisateurs
     @staticmethod
